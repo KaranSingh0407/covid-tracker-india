@@ -23,6 +23,10 @@ public class CovidTrackerService {
     private List<CovidData> allStats = new ArrayList<>();
     private int totalCases;
 
+    public int getTotalCases() {
+        return totalCases;
+    }
+
     public List<CovidData> getAllStats() {
         return allStats;
     }
@@ -41,7 +45,7 @@ public class CovidTrackerService {
         StringReader csvBodyReader = new StringReader(httpResponse.body());
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(csvBodyReader);
         for (CSVRecord record : records) {
-            if(record.get("State") == "Total"){
+            if(record.get("State").equals("Total")){
                 totalCases = Integer.parseInt(record.get("Confirmed"));
             }
             else {
@@ -50,6 +54,7 @@ public class CovidTrackerService {
                 locationStat.setConfirmed(Integer.parseInt(record.get("Confirmed")));
                 locationStat.setConfirmedRise(Integer.parseInt(record.get("Delta_Confirmed")));
                 locationStat.setActive(Integer.parseInt(record.get("Active")));
+                locationStat.setDeaths(Integer.parseInt(record.get("Deaths")));
                 locationStat.setRecovered(Integer.parseInt(record.get("Recovered")));
                 newStats.add(locationStat);
             }
